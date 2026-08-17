@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "luxjson",
+    "slug": "luxjson",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon/luxjson-icon.png",
+    "scheme": "luxjson",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.luxjson",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon/luxjson-icon.png",
+        "backgroundColor": "#1434CB"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0C1016",
+          "image": "./assets/icon/luxjson-icon.png",
+          "imageWidth": 120
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
