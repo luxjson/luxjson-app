@@ -7,6 +7,7 @@
     "icon": "./assets/icon/luxjson-icon.png",
     "scheme": "luxjson",
     "userInterfaceStyle": "automatic",
+
     "android": {
       "package": "com.luxjson",
       "versionCode": 1,
@@ -15,6 +16,7 @@
         "backgroundColor": "#1434CB"
       }
     },
+
     "plugins": [
       "expo-router",
       "expo-secure-store",
@@ -27,8 +29,18 @@
         }
       ]
     ],
+
     "experiments": {
       "typedRoutes": false
+    },
+
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4a6a44f0-64d8-49e9-9d3f-d636fc7656fb"
+      }
     }
   }
 }
