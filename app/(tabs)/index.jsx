@@ -1,6 +1,6 @@
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { useRouter } from 'expo-router';
 import { AppText, DisplayText } from '../../components/AppText';
 import Screen from '../../components/Screen';

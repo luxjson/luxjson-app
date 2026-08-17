@@ -7,6 +7,7 @@ import { LanguageProvider } from '../context/LanguageContext';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
+import UpdateChecker from '../components/UpdateChecker';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -52,6 +53,7 @@ export default function RootLayout() {
       <LanguageProvider>
         <AuthProvider>
           <RootNavigator />
+          <UpdateChecker />
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

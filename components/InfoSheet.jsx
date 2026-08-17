@@ -1,5 +1,5 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { AppText, DisplayText } from './AppText';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';

@@ -7,33 +7,41 @@
     "icon": "./assets/icon/luxjson-icon.png",
     "scheme": "luxjson",
     "userInterfaceStyle": "automatic",
-
     "android": {
       "package": "com.luxjson",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon/luxjson-icon.png",
-        "backgroundColor": "#1434CB"
+        "backgroundColor": "#0027c4"
       }
     },
-
     "plugins": [
       "expo-router",
       "expo-secure-store",
       [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/BOLD.ttf",
+            "./assets/fonts/Poppins-Medium.ttf",
+            "./assets/fonts/Poppins-Bold.ttf"
+          ]
+        }
+      ],
+      "@react-native-vector-icons/material-icons",
+      "@react-native-vector-icons/fontawesome6",
+      [
         "expo-splash-screen",
         {
-          "backgroundColor": "#0C1016",
+          "backgroundColor": "#0027c4",
           "image": "./assets/icon/luxjson-icon.png",
           "imageWidth": 120
         }
       ]
     ],
-
     "experiments": {
       "typedRoutes": false
     },
-
     "extra": {
       "router": {
         "origin": false

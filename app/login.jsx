@@ -1,6 +1,6 @@
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useState } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { useRouter } from 'expo-router';
 import Screen from '../components/Screen';
 import BackButton from '../components/BackButton';

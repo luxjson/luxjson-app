@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6/static';
 import { useTheme } from '../context/ThemeContext';
 
 export default function BrandIconButton({ icon, onPress, size = 46, accessibilityLabel }) {
@@ -15,7 +15,7 @@ export default function BrandIconButton({ icon, onPress, size = 46, accessibilit
         pressed && { transform: [{ scale: 0.94 }] },
       ]}
     >
-      <FontAwesome5 name={icon} brand size={20} color={theme.surface} />
+      <FontAwesome6 name={icon} iconStyle="brand" size={20} color={theme.surface} />
     </Pressable>
   );
 }

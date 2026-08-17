@@ -1,5 +1,5 @@
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { useRouter } from 'expo-router';
 import Screen from '../components/Screen';
 import { AppText, DisplayText } from '../components/AppText';
