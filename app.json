@@ -22,9 +22,7 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/BOLD.ttf",
-            "./assets/fonts/Poppins-Medium.ttf",
-            "./assets/fonts/Poppins-Bold.ttf"
+            "./assets/fonts/BOLD.ttf"
           ]
         }
       ],
@@ -34,10 +32,12 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#0027c4",
-          "image": "./assets/icon/luxjson-icon.png",
+          "image": "./assets/icon/splash.jpg",
           "imageWidth": 120
         }
-      ]
+      ],
+      "expo-notifications",
+      "expo-background-task"
     ],
     "experiments": {
       "typedRoutes": false

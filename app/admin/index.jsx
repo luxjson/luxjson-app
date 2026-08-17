@@ -7,6 +7,7 @@ import SectionHeader from '../../components/SectionHeader';
 import { AppText, DisplayText } from '../../components/AppText';
 import LoadingView from '../../components/LoadingView';
 import BackButton from '../../components/BackButton';
+import AppHeader from '../../components/AppHeader';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -17,6 +18,7 @@ export default function Dashboard() {
   useEffect(() => { let mounted=true; Promise.all([api.get('/blog/stats'), api.get('/blog/posts?limit=5&publishedOnly=false')]).then(([statsRes, postsRes]) => { if (!mounted) return; setStats(statsRes.data || {}); setRecentPosts(postsRes.data?.posts || postsRes.data?.data || (Array.isArray(postsRes.data) ? postsRes.data : [])); }).catch(() => {}).finally(() => mounted && setLoading(false)); return () => { mounted=false; }; }, []);
   if (loading) return <Screen><LoadingView /></Screen>;
   return <Screen><ScrollView contentContainerStyle={styles.container}>
+    <AppHeader title={t.adminLabel} />
     <BackButton fallback="/(tabs)/settings" />
     <SectionHeader eyebrow={t.adminLabel} title={t.adminDashboard} description={`${t.hello}, ${admin?.username || 'Admin'}.`} />
     <View style={styles.grid}>{[["article",t.posts,stats.published ?? 0],["visibility",t.postViews,stats.views ?? 0],["library-books",t.allPostsTitle,stats.posts ?? 0]].map(([icon,label,value]) => <View key={label} style={[styles.stat,{backgroundColor:theme.card,borderColor:theme.surfaceVariant}]}><MaterialIcons name={icon} size={26} color={theme.primary}/><AppText muted>{label}</AppText><DisplayText style={styles.value}>{String(value)}</DisplayText></View>)}</View>

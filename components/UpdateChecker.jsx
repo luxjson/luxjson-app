@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Platform } from 'react-native';
 import { ActivityIndicator, Linking, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
@@ -149,11 +150,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     borderWidth: StyleSheet.hairlineWidth,
     padding: 24,
-    elevation: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.22,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
+    ...Platform.select({ web: { boxShadow: '0 8px 28px rgba(0,0,0,0.22)' }, default: { elevation: 12, shadowColor: '#000', shadowOpacity: 0.22, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } } }),
   },
   icon: {
     width: 56,

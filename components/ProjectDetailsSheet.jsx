@@ -29,7 +29,7 @@ export default function ProjectDetailsSheet({ project, visible, onClose, onInsom
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
-            <Image source={{ uri: `https://opengraph.githubassets.com/1/${project.full_name}` }} style={styles.image} />
+            <View style={[styles.image, { backgroundColor: theme.primaryContainer }]}>{project.owner?.avatar_url ? <Image source={{ uri: project.owner.avatar_url }} style={styles.detailAvatar} /> : <MaterialIcons name="code" size={54} color={theme.primary} />}<View style={{flex:1}}><AppText style={{color:theme.primary,fontFamily:'LuxFirsNeue',fontSize:11,letterSpacing:1.4}}>{project.language || 'CODE'}</AppText><DisplayText style={{fontSize:25}}>{project.name}</DisplayText></View></View>
             <AppText muted style={styles.description}>
               {project.description || t.descriptionUnavailable}
             </AppText>
@@ -79,11 +79,11 @@ const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,.62)', justifyContent: 'flex-end' },
   sheet: { maxHeight: '92%', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: 22 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
-  eyebrow: { fontSize: 11, letterSpacing: 2, fontFamily: 'LuxPoppinsBold' },
+  eyebrow: { fontSize: 11, letterSpacing: 2, fontFamily: 'LuxFirsNeue' },
   title: { fontSize: 30, lineHeight: 35, marginTop: 3, textTransform: 'capitalize' },
   close: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   body: { gap: 16, paddingBottom: 28 },
-  image: { width: '100%', height: 190, borderRadius: 22, backgroundColor: '#222' },
+  image: { width: '100%', minHeight: 190, borderRadius: 22, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 16 }, detailAvatar: { width: 76, height: 76, borderRadius: 22 },
   description: { fontSize: 15, lineHeight: 23 },
   stats: { flexDirection: 'row', gap: 8 },
   stat: { flex: 1, borderWidth: 1, borderRadius: 20, padding: 13, gap: 4 },

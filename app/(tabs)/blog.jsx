@@ -3,12 +3,11 @@ import { useEffect, useState } from 'react';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { useRouter } from 'expo-router';
 import Screen from '../../components/Screen';
+import AppHeader from '../../components/AppHeader';
 import SectionHeader from '../../components/SectionHeader';
 import { AppText, DisplayText } from '../../components/AppText';
 import LoadingView from '../../components/LoadingView';
-import ContactSheet from '../../components/ContactSheet';
 import InfoSheet from '../../components/InfoSheet';
-import IconButton from '../../components/IconButton';
 import { useTheme } from '../../context/ThemeContext';
 import { api, unwrapList } from '../../lib/api';
 import { useLanguage } from '../../context/LanguageContext';
@@ -27,10 +26,9 @@ export default function Blog() {
   const { t, locale } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [contact, setContact] = useState(false);
   const [info, setInfo] = useState(false);
   useEffect(() => { api.get('/blog/posts?limit=10&publishedOnly=true').then(r => setPosts(unwrapList(r))).catch(() => setPosts([])).finally(() => setLoading(false)); }, []);
   if (loading) return <Screen><LoadingView label={t.loadingPosts} /></Screen>;
-  return <Screen><FlatList data={posts} keyExtractor={item => String(item.id || item.slug)} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} ListHeaderComponent={<><View style={styles.topbar}><AppText style={styles.brand}>luxjson</AppText><View style={styles.topActions}><IconButton icon="mail" onPress={() => setContact(true)} accessibilityLabel={t.contact} /><IconButton icon="info" onPress={() => setInfo(true)} accessibilityLabel={t.info} /></View></View><SectionHeader eyebrow={t.blogLabel} title={t.blogNews} description={t.blogDesc} /></>} renderItem={({ item }) => <Card post={item} />} ListEmptyComponent={<View style={[styles.empty, { backgroundColor: theme.card }]}><MaterialIcons name="article" size={50} color={theme.onSurfaceVariant} /><AppText muted>{t.noPublished}</AppText></View>} /><ContactSheet visible={contact} onClose={() => setContact(false)} /><InfoSheet visible={info} onClose={() => setInfo(false)} /></Screen>;
+  return <Screen><FlatList data={posts} keyExtractor={item => String(item.id || item.slug)} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} ListHeaderComponent={<><AppHeader title={t.blog} /><SectionHeader eyebrow={t.blogLabel} title={t.blogNews} description={t.blogDesc} /></>} renderItem={({ item }) => <Card post={item} />} ListEmptyComponent={<View style={[styles.empty, { backgroundColor: theme.card }]}><MaterialIcons name="article" size={50} color={theme.onSurfaceVariant} /><AppText muted>{t.noPublished}</AppText></View>} /><InfoSheet visible={info} onClose={() => setInfo(false)} /></Screen>;
 }
-const styles = StyleSheet.create({ topbar:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginBottom:8},brand:{fontSize:25,fontFamily:'LuxPoppinsBold'},topActions:{flexDirection:'row',gap:6}, container: { padding: 18, paddingBottom: 100 }, card: { borderWidth: 1, borderRadius: 28, overflow: 'hidden', marginBottom: 14 }, cover: { width: '100%', height: 190 }, content: { padding: 18, gap: 10 }, title: { fontSize: 23, lineHeight: 27 }, excerpt: { fontSize: 14, lineHeight: 21 }, meta: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 2 }, metaText: { fontSize: 12 }, empty: { borderRadius: 28, padding: 40, alignItems: 'center', gap: 12 } });
+const styles = StyleSheet.create({ container: { padding: 18, paddingBottom: 100 }, card: { borderWidth: 1, borderRadius: 28, overflow: 'hidden', marginBottom: 14 }, cover: { width: '100%', height: 190 }, content: { padding: 18, gap: 10 }, title: { fontSize: 23, lineHeight: 27 }, excerpt: { fontSize: 14, lineHeight: 21 }, meta: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 2 }, metaText: { fontSize: 12 }, empty: { borderRadius: 28, padding: 40, alignItems: 'center', gap: 12 } });

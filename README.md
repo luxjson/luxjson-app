@@ -6,13 +6,13 @@
    <!-- TODO: Get a job -->
    <img src="https://luxjson.is-a.dev/favicon.png" width="100px" height="100px" style="border-radius: 30%; margin-right:15px" align="left">
    
-   ### `LUXJSON`
+   ### `luxjson`
    
    ![Status](https://img.shields.io/badge/STATUS-OPERATIONAL-green)
    ![Version](https://img.shields.io/badge/VERSION-1.0-gold)
    ![OS](https://img.shields.io/badge/OS-ANDROID-3DDC84)
    
-   **LUXJSON** - The official LuxJSON mobile application.
+   **luxjson** - The official luxjson mobile application.
    
    <div flex="true">
      <a href="https://luxjson.is-a.dev">

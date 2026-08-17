@@ -1,43 +1,104 @@
-import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useMemo, useState } from 'react';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
 import { useRouter } from 'expo-router';
 import Screen from '../../components/Screen';
-import SectionHeader from '../../components/SectionHeader';
+import AppHeader from '../../components/AppHeader';
+import ServerStatusCard from '../../components/ServerStatusCard';
 import { AppText } from '../../components/AppText';
 import { useTheme } from '../../context/ThemeContext';
-import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { openExternal } from '../../lib/external';
 
 export default function Settings() {
-  const { theme, mode, setThemeMode, materialYou, setMaterialYouEnabled } = useTheme();
-  const { isAuthenticated, logout, admin } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+  const { theme } = useTheme();
+  const { t } = useLanguage();
   const router = useRouter();
-  const languages = [['pt', t.portuguese], ['en', t.english], ['es', t.spanish]];
-  return <Screen><ScrollView contentContainerStyle={styles.container}>
-    <SectionHeader eyebrow="luxjson" title={t.settingsTitle} description={t.settingsDesc} />
-    <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }]}>
-      <View style={styles.row}><View style={[styles.icon, { backgroundColor: theme.primaryContainer }]}><MaterialIcons name="palette" size={23} color={theme.primary} /></View><View style={styles.flex}><AppText style={styles.title}>{t.materialYou}</AppText><AppText muted style={styles.desc}>{t.materialDesc}</AppText></View><Switch value={materialYou} onValueChange={setMaterialYouEnabled} trackColor={{ false: theme.surfaceVariant, true: theme.primaryContainer }} thumbColor={materialYou ? theme.primary : theme.onSurfaceVariant} /></View>
-      <View style={[styles.divider, { backgroundColor: theme.surfaceVariant }]} />
-      <AppText style={styles.title}>{t.theme}</AppText>
-      <View style={styles.themeRow}>{[['system',t.system],['light',t.light],['dark',t.dark]].map(([value,label]) => <Pressable key={value} onPress={() => setThemeMode(value)} style={[styles.themeButton, { borderColor: mode === value ? theme.primary : theme.surfaceVariant, backgroundColor: mode === value ? theme.primaryContainer : theme.surface }]}><AppText style={{ color: mode === value ? theme.primary : theme.onSurface }}>{label}</AppText></Pressable>)}</View>
-    </View>
-    <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }]}>
-      <View style={styles.row}><View style={[styles.icon, { backgroundColor: theme.primaryContainer }]}><MaterialIcons name="language" size={23} color={theme.primary} /></View><View style={styles.flex}><AppText style={styles.title}>{t.language}</AppText><AppText muted style={styles.desc}>{t.portuguese} / {t.english} / {t.spanish}</AppText></View></View>
-      <View style={styles.themeRow}>{languages.map(([value,label]) => <Pressable key={value} onPress={() => setLanguage(value)} style={[styles.themeButton, { borderColor: language === value ? theme.primary : theme.surfaceVariant, backgroundColor: language === value ? theme.primaryContainer : theme.surface }]}><AppText style={{ color: language === value ? theme.primary : theme.onSurface }}>{label}</AppText></Pressable>)}</View>
-    </View>
-    <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }]}>
-      <AppText style={styles.title}>{t.externalLinks}</AppText>
-      {[["code","GitHub","https://github.com/luxjson"],["language",t.docs,"https://api.luxjson.is-a.dev/docs"]].map(([icon,label,url]) => <Pressable key={url} onPress={() => openExternal(url)} style={styles.link}><MaterialIcons name={icon} size={22} color={theme.primary} /><AppText style={styles.flex}>{label}</AppText><MaterialIcons name="open-in-new" size={20} color={theme.onSurfaceVariant} /></Pressable>)}
-    </View>
-    <View style={[styles.card, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }]}>
-      <AppText style={styles.title}>{t.adminArea}</AppText>
-      <AppText muted style={styles.desc}>{isAuthenticated ? `${t.session}: ${admin?.username || 'Admin'}` : t.manageBlog}</AppText>
-      <Pressable onPress={isAuthenticated ? () => router.push('/admin') : () => router.push('/login')} style={[styles.action, { backgroundColor: theme.primary }]}><AppText style={{ color: theme.onPrimary, fontWeight: '700' }}>{isAuthenticated ? t.openPanel : t.login}</AppText></Pressable>
-      {isAuthenticated ? <Pressable onPress={async () => { await logout(); router.replace('/'); }} style={[styles.action, { backgroundColor: theme.surfaceVariant }]}><AppText style={{ color: theme.onSurface, fontWeight: '700' }}>{t.logout}</AppText></Pressable> : null}
-    </View>
-    <AppText muted style={styles.version}>Version 1.0.0</AppText>
-  </ScrollView></Screen>;
+  const [query, setQuery] = useState('');
+
+  const items = useMemo(() => [
+    ['appearance', 'palette', t.customization, t.customizationDesc, `${t.theme} ${t.materialYou} ${t.accent}`],
+    ['language', 'language', t.language, t.languageDesc, `${t.portuguese} ${t.english} ${t.spanish}`],
+    ['notifications', 'notifications', t.notificationsTitle, t.notificationsDescShort, t.notifications],
+    ['connections', 'link', t.connectionsTitle, t.connectionsDesc, `${t.github} ${t.itch}`],
+    ['admin', 'admin-panel-settings', t.adminTitle, t.adminDesc, t.adminArea],
+    ['support', 'favorite-border', t.supportTitle, t.supportDesc, `${t.supportItch} ${t.supportGithub}`],
+    ['links', 'public', t.linksTitle, t.linksDesc, `${t.portfolio} ${t.apiSite} ${t.docs}`],
+  ], [t]);
+
+  const normalized = query.trim().toLocaleLowerCase();
+  const visible = normalized
+    ? items.filter(([, , title, desc, keywords]) => `${title} ${desc} ${keywords}`.toLocaleLowerCase().includes(normalized))
+    : items;
+
+  return (
+    <Screen>
+      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
+        <AppHeader title={t.settings} />
+
+        <View style={[styles.search, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }]}>
+          <MaterialIcons name="search" size={21} color={theme.onSurfaceVariant} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder={t.searchSettings}
+            placeholderTextColor={theme.onSurfaceVariant}
+            style={[styles.searchInput, { color: theme.onSurface }]}
+            returnKeyType="search"
+          />
+          {query ? <Pressable onPress={() => setQuery('')} hitSlop={8}><MaterialIcons name="close" size={20} color={theme.onSurfaceVariant} /></Pressable> : null}
+        </View>
+
+        <ServerStatusCard />
+
+        <View style={styles.list}>
+          {visible.map(([id, icon, title, desc]) => (
+            <SettingCard key={id} icon={icon} title={title} desc={desc} theme={theme} onPress={() => router.push(`/settings/${id}`)} />
+          ))}
+        </View>
+
+        {!visible.length ? (
+          <View style={styles.empty}>
+            <MaterialIcons name="search-off" size={42} color={theme.onSurfaceVariant} />
+            <AppText muted>{t.noResults}</AppText>
+          </View>
+        ) : null}
+
+        <View style={styles.footerLinks}>
+          <Pressable onPress={() => openExternal('https://luxjson.is-a.dev')}><AppText muted style={styles.footerLink}>{t.portfolio}</AppText></Pressable>
+          <View style={[styles.dot, { backgroundColor: theme.outline }]} />
+          <Pressable onPress={() => openExternal('https://api.luxjson.is-a.dev')}><AppText muted style={styles.footerLink}>{t.apiSite}</AppText></Pressable>
+        </View>
+        <AppText muted style={styles.version}>Version 1.0.0</AppText>
+      </ScrollView>
+    </Screen>
+  );
 }
-const styles = StyleSheet.create({ container:{padding:18,paddingBottom:100,gap:16},card:{borderWidth:1,borderRadius:28,padding:20,gap:16},row:{flexDirection:'row',alignItems:'center',gap:12},icon:{width:46,height:46,borderRadius:23,alignItems:'center',justifyContent:'center'},flex:{flex:1},title:{fontSize:17,fontFamily:'LuxPoppinsBold'},desc:{fontSize:13,lineHeight:19,marginTop:3},divider:{height:1},themeRow:{flexDirection:'row',gap:8},themeButton:{flex:1,minHeight:46,borderWidth:1,borderRadius:23,alignItems:'center',justifyContent:'center',paddingHorizontal:8},link:{flexDirection:'row',alignItems:'center',gap:12,minHeight:46},action:{minHeight:50,borderRadius:25,alignItems:'center',justifyContent:'center'},version:{textAlign:'center',paddingVertical:10}});
+
+function SettingCard({ icon, title, desc, theme, onPress }) {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, { backgroundColor: theme.card, borderColor: theme.surfaceVariant }, pressed && styles.pressed]}>
+      <View style={[styles.icon, { backgroundColor: theme.primaryContainer }]}><MaterialIcons name={icon} size={22} color={theme.primary} /></View>
+      <View style={styles.copy}><AppText style={styles.title}>{title}</AppText><AppText muted style={styles.desc}>{desc}</AppText></View>
+      <MaterialIcons name="chevron-right" size={24} color={theme.onSurfaceVariant} />
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { padding: 18, paddingBottom: 135, gap: 15 },
+  search: { height: 52, borderWidth: 1, borderRadius: 26, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 9 },
+  searchInput: { flex: 1, fontFamily: 'LuxFirsNeue', fontSize: 14 },
+  list: { gap: 11 },
+  card: { minHeight: 78, borderWidth: 1, borderRadius: 25, padding: 15, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  icon: { width: 46, height: 46, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  copy: { flex: 1, gap: 3 },
+  title: { fontSize: 16 },
+  desc: { fontSize: 11, lineHeight: 16 },
+  empty: { alignItems: 'center', gap: 10, padding: 40 },
+  footerLinks: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, paddingTop: 8 },
+  footerLink: { fontSize: 11 },
+  dot: { width: 3, height: 3, borderRadius: 2 },
+  version: { textAlign: 'center', fontSize: 10, paddingBottom: 4 },
+  pressed: { opacity: 0.78, transform: [{ scale: 0.992 }] },
+});

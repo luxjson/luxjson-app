@@ -8,11 +8,12 @@ import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
 import UpdateChecker from '../components/UpdateChecker';
+import { initializeNotifications } from '../lib/notifications';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootNavigator() {
-  const { colorScheme } = useTheme();
+  const { colorScheme, animations } = useTheme();
 
   return (
     <View style={{ flex: 1 }}>
@@ -23,8 +24,8 @@ function RootNavigator() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'slide_from_right',
-          animationDuration: 220,
+          animation: animations ? 'slide_from_right' : 'none',
+          animationDuration: animations ? 220 : 0,
         }}
       />
     </View>
@@ -33,10 +34,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    LuxAsgard: require('../assets/fonts/BOLD.ttf'),
-    LuxPoppins: require('../assets/fonts/Poppins-Medium.ttf'),
-    LuxPoppinsBold: require('../assets/fonts/Poppins-Bold.ttf'),
+    LuxFirsNeue: require('../assets/fonts/BOLD.ttf'),
   });
+
+  useEffect(() => {
+    initializeNotifications();
+  }, []);
 
   useEffect(() => {
     if (loaded || error) {
