@@ -18,8 +18,11 @@ export const luxLight = {
   surfaceVariant: '#E2E2EC',
   onSurfaceVariant: '#45464F',
   outline: '#767780',
+  outlineVariant: '#C6C6D0',
   error: '#BA1A1A',
   onError: '#FFFFFF',
+  errorContainer: '#FFDAD6',
+  onErrorContainer: '#410002',
   success: '#2E6B45',
   warning: '#805500',
   card: '#FFFFFF'
@@ -45,8 +48,11 @@ export const luxDark = {
   surfaceVariant: '#45464F',
   onSurfaceVariant: '#C6C6D0',
   outline: '#90909A',
+  outlineVariant: '#45464F',
   error: '#FFB4AB',
   onError: '#690005',
+  errorContainer: '#93000A',
+  onErrorContainer: '#FFDAD6',
   success: '#9DD5AD',
   warning: '#F4C76A',
   card: '#1A1B20'

@@ -147,7 +147,6 @@ const dictionaries = {
     supportContact: "Contato",
     descriptionUnavailable: "Este projeto não possui uma descrição pública.",
     openProject: "VER NO GITHUB",
-    openInsomnia: "ABRIR INSOMNIA",
     noApiPosts: "Não foi possível carregar os posts agora.",
   },
   en: {},
@@ -292,7 +291,6 @@ dictionaries.en = {
   supportContact: "Contact",
   descriptionUnavailable: "This project has no public description.",
   openProject: "VIEW ON GITHUB",
-  openInsomnia: "OPEN INSOMNIA",
   noApiPosts: "Posts could not be loaded right now.",
 };
 
@@ -417,7 +415,6 @@ dictionaries.es = {
   repository: "REPOSITORIO",
   descriptionUnavailable: "Este proyecto no tiene una descripción pública.",
   openProject: "VER EN GITHUB",
-  openInsomnia: "ABRIR INSOMNIA",
   languageField: "Lenguaje",
   updated: "Actualizado",
   noApiPosts: "No se pudieron cargar las publicaciones ahora.",
@@ -438,8 +435,6 @@ const extraTranslations = {
     comfortable: "Confortável",
     animations: "Animações",
     accent: "Cor de destaque",
-    notifications: "Notificações",
-    notificationsDesc: "Receba avisos quando um novo post for publicado.",
     checkNow: "VERIFICAR AGORA",
     connected: "Conectado",
     connect: "Conectar",
@@ -474,6 +469,7 @@ const extraTranslations = {
     resetDesc: "Volta todas as preferências visuais ao padrão.",
     searchResults: "Resultados",
     noResults: "Nenhuma configuração encontrada.",
+    retry: "TENTAR NOVAMENTE",
   },
   en: {
     projects: "Projects",
@@ -489,8 +485,6 @@ const extraTranslations = {
     comfortable: "Comfortable",
     animations: "Animations",
     accent: "Accent color",
-    notifications: "Notifications",
-    notificationsDesc: "Get notified when a new post is published.",
     checkNow: "CHECK NOW",
     connected: "Connected",
     connect: "Connect",
@@ -524,6 +518,7 @@ const extraTranslations = {
     resetDesc: "Restore all visual preferences to their defaults.",
     searchResults: "Results",
     noResults: "No settings found.",
+    retry: "RETRY",
   },
   es: {
     projects: "Proyectos",
@@ -539,8 +534,6 @@ const extraTranslations = {
     comfortable: "Cómoda",
     animations: "Animaciones",
     accent: "Color de acento",
-    notifications: "Notificaciones",
-    notificationsDesc: "Recibe avisos cuando se publique una nueva entrada.",
     checkNow: "COMPROBAR AHORA",
     connected: "Conectado",
     connect: "Conectar",
@@ -575,6 +568,7 @@ const extraTranslations = {
     resetDesc: "Restaura todas las preferencias visuales.",
     searchResults: "Resultados",
     noResults: "No se encontraron ajustes.",
+    retry: "REINTENTAR",
   },
 };
 Object.keys(extraTranslations).forEach((key) => {
@@ -587,8 +581,6 @@ const settingsTranslations = {
     languageDesc: "Escolha o idioma aplicado em todo o aplicativo.",
     connectionsTitle: "Conexões",
     connectionsDesc: "Gerencie GitHub e itch.io.",
-    notificationsTitle: "Notificações",
-    notificationsDescShort: "Avisos sobre novos posts do blog.",
     adminTitle: "Área administrativa",
     adminDesc: "Acesse e gerencie o conteúdo do blog.",
     supportTitle: "Apoie o luxjson",
@@ -608,6 +600,9 @@ const settingsTranslations = {
     refresh: "Atualizar",
     serverEndpoint: "api.luxjson.is-a.dev",
     publicGamesOnly: "A aba Games usa somente os jogos públicos de deadsml.",
+    supportPix: "Copiar chave PIX",
+    pixCopied: "PIX copiado",
+    pixOnlyBrazil: "Disponível somente no Brasil.",
   },
   en: {
     customizationDesc:
@@ -615,8 +610,6 @@ const settingsTranslations = {
     languageDesc: "Choose the language used across the entire app.",
     connectionsTitle: "Connections",
     connectionsDesc: "Manage GitHub and itch.io.",
-    notificationsTitle: "Notifications",
-    notificationsDescShort: "Alerts for new blog posts.",
     adminTitle: "Administration",
     adminDesc: "Access and manage blog content.",
     supportTitle: "Support luxjson",
@@ -636,6 +629,9 @@ const settingsTranslations = {
     refresh: "Refresh",
     serverEndpoint: "api.luxjson.is-a.dev",
     publicGamesOnly: "The Games tab uses only public games from deadsml.",
+    supportPix: "Copy PIX key",
+    pixCopied: "PIX copied",
+    pixOnlyBrazil: "Available only in Brazil.",
   },
   es: {
     customizationDesc:
@@ -643,8 +639,6 @@ const settingsTranslations = {
     languageDesc: "Elige el idioma usado en toda la aplicación.",
     connectionsTitle: "Conexiones",
     connectionsDesc: "Gestiona GitHub y itch.io.",
-    notificationsTitle: "Notificaciones",
-    notificationsDescShort: "Avisos sobre nuevas publicaciones.",
     adminTitle: "Administración",
     adminDesc: "Accede y gestiona el contenido del blog.",
     supportTitle: "Apoya a luxjson",
@@ -665,6 +659,9 @@ const settingsTranslations = {
     serverEndpoint: "api.luxjson.is-a.dev",
     publicGamesOnly:
       "La pestaña Juegos usa solo los juegos públicos de deadsml.",
+    supportPix: "Copiar clave PIX",
+    pixCopied: "PIX copiado",
+    pixOnlyBrazil: "Disponible solamente en Brasil.",
   },
 };
 Object.keys(settingsTranslations).forEach((key) => {
@@ -672,7 +669,7 @@ Object.keys(settingsTranslations).forEach((key) => {
 });
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState("pt");
+  const [language, setLanguageState] = useState("en");
   useEffect(() => {
     getItem("lux-language").then((saved) => {
       if (saved && dictionaries[saved]) setLanguageState(saved);

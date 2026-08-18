@@ -19,7 +19,6 @@ export default function Settings() {
   const items = useMemo(() => [
     ['appearance', 'palette', t.customization, t.customizationDesc, `${t.theme} ${t.materialYou} ${t.accent}`],
     ['language', 'language', t.language, t.languageDesc, `${t.portuguese} ${t.english} ${t.spanish}`],
-    ['notifications', 'notifications', t.notificationsTitle, t.notificationsDescShort, t.notifications],
     ['connections', 'link', t.connectionsTitle, t.connectionsDesc, `${t.github} ${t.itch}`],
     ['admin', 'admin-panel-settings', t.adminTitle, t.adminDesc, t.adminArea],
     ['support', 'favorite-border', t.supportTitle, t.supportDesc, `${t.supportItch} ${t.supportGithub}`],

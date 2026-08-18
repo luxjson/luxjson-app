@@ -25,20 +25,20 @@ export default function AppHeader({ title = 'luxjson', showActions = true }) {
         {showActions ? (
           <View style={styles.actions}>
             <Pressable
+              onPress={() => setContact(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t.contact}
+              style={({ pressed }) => [styles.action, { backgroundColor: actionBackground }, pressed && styles.pressed]}
+            >
+              <MaterialIcons name="mail-outline" size={20} color={actionForeground} />
+            </Pressable>
+            <Pressable
               onPress={() => setInfo(true)}
               accessibilityRole="button"
               accessibilityLabel={t.info}
               style={({ pressed }) => [styles.action, { backgroundColor: actionBackground }, pressed && styles.pressed]}
             >
               <MaterialIcons name="info-outline" size={20} color={actionForeground} />
-            </Pressable>
-            <Pressable
-              onPress={() => router.push('/(tabs)/settings')}
-              accessibilityRole="button"
-              accessibilityLabel={t.settings}
-              style={({ pressed }) => [styles.action, { backgroundColor: actionBackground }, pressed && styles.pressed]}
-            >
-              <MaterialIcons name="tune" size={20} color={actionForeground} />
             </Pressable>
           </View>
         ) : null}

@@ -36,7 +36,6 @@
           "imageWidth": 120
         }
       ],
-      "expo-notifications",
       "expo-background-task"
     ],
     "experiments": {
@@ -47,8 +46,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "4a6a44f0-64d8-49e9-9d3f-d636fc7656fb"
+        "projectId": "332b916e-d5d5-4313-bf0b-123739d64fa2"
       }
-    }
+    },
+    "owner": "luxjsonreserva"
   }
 }

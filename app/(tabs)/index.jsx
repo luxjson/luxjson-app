@@ -62,9 +62,6 @@ export default function Home() {
             <BrandIconButton icon="linkedin" onPress={() => openExternal('https://www.linkedin.com/company/luxjson')} accessibilityLabel="LinkedIn" />
             <IconButton icon="info-outline" onPress={() => setInfo(true)} accessibilityLabel={t.info} />
           </View>
-          <Pressable onPress={() => setInfo(true)} hitSlop={8}>
-            <AppText muted style={styles.infoLink}>{t.info}</AppText>
-          </Pressable>
         </View>
       </ScrollView>
       <InfoSheet visible={info} onClose={() => setInfo(false)} />

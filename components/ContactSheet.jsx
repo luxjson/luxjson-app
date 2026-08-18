@@ -15,7 +15,10 @@ export default function ContactSheet({ visible, onClose }) {
     if (!form.name || !form.email || !form.message) { setStatus(t.requiredContact); return; }
     setStatus(t.sending);
     try { await sendContactEmail({ name: form.name, email: form.email, subject: form.subject, message: form.message }); setStatus(t.sent); setForm({ name: '', email: '', subject: '', message: '' }); }
-    catch { setStatus(t.sendError); }
+    catch (error) {
+      console.error("EMAILJS ERROR:", error);
+      setStatus(error?.message || t.sendError);
+    }
   };
   return <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
     <View style={styles.overlay}><View style={[styles.sheet, { backgroundColor: theme.surface }]}>

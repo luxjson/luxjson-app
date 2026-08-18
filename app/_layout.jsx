@@ -8,7 +8,6 @@ import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
 import UpdateChecker from '../components/UpdateChecker';
-import { initializeNotifications } from '../lib/notifications';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -36,10 +35,6 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     LuxFirsNeue: require('../assets/fonts/BOLD.ttf'),
   });
-
-  useEffect(() => {
-    initializeNotifications();
-  }, []);
 
   useEffect(() => {
     if (loaded || error) {

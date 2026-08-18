@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { MaterialIcons } from "@react-native-vector-icons/material-icons/static";
-import { useRouter } from "expo-router";
+import { useRouter, Redirect } from "expo-router";
 import Screen from "../components/Screen";
 import BackButton from "../components/BackButton";
 import AppHeader from "../components/AppHeader";
@@ -20,7 +20,7 @@ import { useLanguage } from "../context/LanguageContext";
 export default function Login() {
   const { theme } = useTheme();
   const { t } = useLanguage();
-  const { login } = useAuth();
+  const { login, isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +34,9 @@ export default function Login() {
     if (result.success) router.replace("/admin");
     else setError(result.message);
   };
+
+  if (!loading && isAuthenticated) return <Redirect href="/admin" />;
+
 return (
   <Screen>
     <View style={styles.headerWrapper}>

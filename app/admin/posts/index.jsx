@@ -26,7 +26,7 @@ export default function PostsList() {
       await api.delete(`/blog/posts/${encodeURIComponent(String(id))}`);
       setPosts(current => current.filter(post => String(post.id) !== String(id)));
     } catch (error) {
-      console.error('[luxjson] Erro ao excluir post:', error?.response?.data || error?.message || error);
+      if (__DEV__) console.error('[luxjson] Erro ao excluir post:', error?.response?.data || error?.message || error);
       Alert.alert(t.error, error?.response?.data?.message || t.deleteError);
     } finally {
       setDeleting(null);

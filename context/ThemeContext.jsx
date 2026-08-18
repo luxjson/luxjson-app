@@ -7,20 +7,20 @@ import { getItem, setItem } from '../lib/storage';
 const ThemeContext = createContext(null);
 
 const accents = {
-  blue: '#1434CB',
-  violet: '#6750A4',
-  cyan: '#006874',
-  pink: '#8E4A66',
-  green: '#386A20',
-  orange: '#8A5000',
+  blue: "#1434CB",
+  violet: "#7C4DFF",
+  cyan: "#00A6C7",
+  pink: "#E84A8A",
+  green: "#22A06B",
+  orange: "#F59E0B",
 };
 
 export function ThemeProvider({ children }) {
   const systemScheme = useColorScheme() || 'light';
   const [mode, setMode] = useState('system');
-  const [materialYou, setMaterialYou] = useState(true);
+  const [materialYou, setMaterialYou] = useState(false);
   const [accent, setAccent] = useState('blue');
-  const [navStyle, setNavStyle] = useState('floating');
+  const [navStyle, setNavStyle] = useState('classic');
   const [density, setDensity] = useState('comfortable');
   const [animations, setAnimations] = useState(true);
   const { theme: dynamicTheme } = useMaterial3Theme({ fallbackSourceColor: accents.blue });

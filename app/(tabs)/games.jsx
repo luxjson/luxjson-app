@@ -61,7 +61,7 @@ export default function Games() {
               <View style={[styles.error, { backgroundColor: theme.error + '12' }]}>
                 <AppText style={{ color: theme.error }}>{t.noGames}</AppText>
                 <Pressable onPress={load} style={[styles.retry, { backgroundColor: theme.error }]}>
-                  <AppText style={{ color: theme.onError, fontWeight: '700' }}>{t.retry || 'Retry'}</AppText>
+                  <AppText style={{ color: theme.onError, fontWeight: '700' }}>{t.retry}</AppText>
                 </Pressable>
               </View>
             ) : null}
