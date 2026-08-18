@@ -5,26 +5,17 @@ import { useTheme } from "../context/ThemeContext";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const FLOATING_MARGIN = Platform.OS === "web" ? 32 : 16;
 
-/**
- * Custom bottom tab bar, used for both the "classic" and "floating" nav
- * styles.
- *
- * Why not just use React Navigation's built-in `tabBarStyle: { position:
- * "absolute", ... }`, like before? That approach renders correctly on web,
- * but combining `position: absolute` with `borderRadius` + `elevation` +
- * shadow on native (especially Android) is a known source of inconsistent,
- * sometimes badly corrupted rendering — the tab bar's own container can end
- * up compositing incorrectly against sibling screen content, which is
- * exactly the "looks totally different on the phone" symptom being fixed
- * here. Rendering our own View/Pressable tree via the `tabBar` render prop
- * removes that dependency entirely: the exact same component tree runs on
- * every platform, so there's nothing left for web and native to disagree on.
- */
 export default function FloatingTabBar({ state, descriptors, navigation }) {
   const { theme, navStyle } = useTheme();
   const insets = useSafeAreaInsets();
   const floating = navStyle === "floating";
-  const floatingWidth = Math.min(SCREEN_WIDTH - FLOATING_MARGIN * 2, 480);
+
+  // Floating fica mais compacto.
+  // Classic continua usando 100% da largura.
+  const floatingWidth = Math.min(
+    SCREEN_WIDTH - FLOATING_MARGIN * 2,
+    320
+  );
 
   const tabs = state.routes.map((route, index) => {
     const { options } = descriptors[route.key];
@@ -38,6 +29,7 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
         target: route.key,
         canPreventDefault: true,
       });
+
       if (!isFocused && !event.defaultPrevented) {
         navigation.navigate(route.name);
       }
@@ -49,20 +41,44 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
         onPress={onPress}
         accessibilityRole="button"
         accessibilityState={isFocused ? { selected: true } : {}}
-        accessibilityLabel={options.tabBarAccessibilityLabel ?? String(label)}
-        style={({ pressed }) => [styles.tab, pressed && styles.tabPressed]}
+        accessibilityLabel={
+          options.tabBarAccessibilityLabel ?? String(label)
+        }
+        style={({ pressed }) => [
+          styles.tab,
+          pressed && styles.tabPressed,
+        ]}
       >
-        {options.tabBarIcon?.({ focused: isFocused, color, size: 24 })}
-        <Text
-          numberOfLines={1}
-          style={[styles.label, { color, fontFamily: "LuxFirsNeue" }]}
-        >
-          {label}
-        </Text>
+        {options.tabBarIcon?.({
+          focused: isFocused,
+          color,
+          // Somente o Floating recebe ícones maiores.
+          // Classic permanece 24.
+          size: floating ? 32 : 24,
+        })}
+
+        {/* Texto continua existindo somente no Classic */}
+        {!floating && (
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.label,
+              {
+                color,
+                fontFamily: "LuxFirsNeue",
+              },
+            ]}
+          >
+            {label}
+          </Text>
+        )}
       </Pressable>
     );
   });
 
+  // ============================================================
+  // CLASSIC — NÃO ALTERADO
+  // ============================================================
   if (!floating) {
     return (
       <View style={styles.classicWrapper}>
@@ -85,20 +101,11 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
     );
   }
 
+  // ============================================================
+  // FLOATING — SOMENTE ÍCONES
+  // ============================================================
   return (
     <View pointerEvents="box-none" style={styles.floatingWrapper}>
-      {/*
-        THE FIX: on Android, putting `elevation` (the shadow) and
-        `overflow: "hidden"` + `borderRadius` on the SAME View that also
-        contains the tab children is a known native rendering bug — the
-        elevated surface can end up compositing itself above its own
-        children, so the pill renders but everything inside it (icons +
-        labels) is invisible. This is exactly the "navbar aparece mas os
-        itens não aparecem" symptom.
-        The fix is to split it into two layers: an OUTER view that only
-        owns the shadow/elevation (no clipping), and an INNER view that
-        owns the rounded clipping + background + the actual tab content.
-      */}
       <View
         style={[
           styles.shadowLayer,
@@ -107,7 +114,9 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
             borderRadius: 34,
             backgroundColor: theme.surface,
             marginBottom:
-              Platform.OS === "web" ? 16 : Math.max(insets.bottom + 8, 20),
+              Platform.OS === "web"
+                ? 16
+                : Math.max(insets.bottom + 8, 20),
           },
           Platform.select({
             web: {
@@ -118,7 +127,10 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
               shadowColor: "#000",
               shadowOpacity: 0.12,
               shadowRadius: 12,
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
             },
           }),
         ]}
@@ -151,18 +163,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
   },
+
   classicWrapper: {
     width: "100%",
   },
+
   shadowLayer: {
-    // No overflow/clipping here on purpose — see the comment above where
-    // this style is used. This layer only exists to carry the shadow.
+    // Sem overflow/clipping para evitar problemas de composição
+    // no Android.
   },
+
   bar: {
     flexDirection: "row",
     alignItems: "center",
     overflow: "hidden",
   },
+
   tab: {
     flex: 1,
     height: "100%",
@@ -170,9 +186,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 2,
   },
+
   tabPressed: {
     opacity: 0.7,
   },
+
   label: {
     fontSize: 10,
   },
