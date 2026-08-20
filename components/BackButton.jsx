@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
-    marginBottom: 4,
+    marginBottom: 10,
   },
   pressed: { opacity: 0.72, transform: [{ scale: 0.98 }] },
 });

@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { openExternal } from '../lib/external';
 
-export default function ProjectDetailsSheet({ project, visible, onClose, onInsomnia }) {
+export default function ProjectDetailsSheet({ project, visible, onClose }) {
   const { theme } = useTheme();
   const { t, locale } = useLanguage();
   if (!project) return null;
@@ -46,11 +46,11 @@ export default function ProjectDetailsSheet({ project, visible, onClose, onInsom
             </View>
 
             <Pressable
-              onPress={() => project.name.toLowerCase().includes('insomnia') ? onInsomnia() : openExternal(project.html_url)}
+              onPress={() => openExternal(project.html_url)}
               style={({ pressed }) => [styles.primary, { backgroundColor: theme.primary }, pressed && styles.pressed]}
             >
               <AppText style={{ color: theme.onPrimary, fontWeight: '700' }}>
-                {project.name.toLowerCase().includes('insomnia') ? t.openInsomnia : t.openProject}
+                {t.openProject}
               </AppText>
               <MaterialIcons name="open-in-new" size={20} color={theme.onPrimary} />
             </Pressable>

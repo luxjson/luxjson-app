@@ -46,14 +46,14 @@ export default function Games() {
         ListHeaderComponent={
           <>
             <AppHeader title={t.games} />
-            <SectionHeader eyebrow="ITCH.IO" title={t.games} description={t.gamesDesc} />
+            <SectionHeader  title={t.games} description={t.gamesDesc} />
             <Pressable
               onPress={() => openExternal(itchProfileUrl(DEFAULT_ITCH_USER))}
               style={[styles.profile, { backgroundColor: theme.primaryContainer }]}
             >
               <View style={{ flex: 1 }}>
-                <AppText style={{ color: theme.primary, fontFamily: 'LuxFirsNeue' }}>DEADSMILE</AppText>
-                <AppText muted style={{ marginTop: 2 }}>deadsml.itch.io</AppText>
+                <AppText style={{ color: theme.primary, fontFamily: 'LuxFirsNeue' }}>{t.seeLinkItch.toLocaleUpperCase()}</AppText>
+                <AppText muted style={{ marginTop: 2 }}>{itchProfileUrl(DEFAULT_ITCH_USER).replace('https://', '').toLocaleLowerCase()}</AppText>
               </View>
               <MaterialIcons name="open-in-new" size={20} color={theme.primary} />
             </Pressable>

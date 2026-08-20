@@ -9,9 +9,6 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
   const { theme, navStyle } = useTheme();
   const insets = useSafeAreaInsets();
   const floating = navStyle === "floating";
-
-  // Floating fica mais compacto.
-  // Classic continua usando 100% da largura.
   const floatingWidth = Math.min(
     SCREEN_WIDTH - FLOATING_MARGIN * 2,
     320
@@ -52,12 +49,9 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
         {options.tabBarIcon?.({
           focused: isFocused,
           color,
-          // Somente o Floating recebe ícones maiores.
-          // Classic permanece 24.
-          size: floating ? 32 : 24,
+          size: floating ? 28 : 24,
         })}
 
-        {/* Texto continua existindo somente no Classic */}
         {!floating && (
           <Text
             numberOfLines={1}
@@ -75,10 +69,6 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
       </Pressable>
     );
   });
-
-  // ============================================================
-  // CLASSIC — NÃO ALTERADO
-  // ============================================================
   if (!floating) {
     return (
       <View style={styles.classicWrapper}>
@@ -100,10 +90,6 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
       </View>
     );
   }
-
-  // ============================================================
-  // FLOATING — SOMENTE ÍCONES
-  // ============================================================
   return (
     <View pointerEvents="box-none" style={styles.floatingWrapper}>
       <View
@@ -111,7 +97,9 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
           styles.shadowLayer,
           {
             width: floatingWidth,
-            borderRadius: 34,
+            borderRadius: 1000,
+            borderWidth: 1,
+            borderColor: theme.surfaceVariant,
             backgroundColor: theme.surface,
             marginBottom:
               Platform.OS === "web"
@@ -120,17 +108,8 @@ export default function FloatingTabBar({ state, descriptors, navigation }) {
           },
           Platform.select({
             web: {
-              boxShadow: "0 6px 22px rgba(0,0,0,0.12)",
             },
             default: {
-              elevation: 8,
-              shadowColor: "#000",
-              shadowOpacity: 0.12,
-              shadowRadius: 12,
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
             },
           }),
         ]}
@@ -159,7 +138,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 10,
     alignItems: "center",
     zIndex: 10,
   },
@@ -169,8 +148,6 @@ const styles = StyleSheet.create({
   },
 
   shadowLayer: {
-    // Sem overflow/clipping para evitar problemas de composição
-    // no Android.
   },
 
   bar: {

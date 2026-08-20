@@ -68,7 +68,7 @@ export default function Settings() {
           <View style={[styles.dot, { backgroundColor: theme.outline }]} />
           <Pressable onPress={() => openExternal('https://api.luxjson.is-a.dev')}><AppText muted style={styles.footerLink}>{t.apiSite}</AppText></Pressable>
         </View>
-        <AppText muted style={styles.version}>Version 1.0.0</AppText>
+        <AppText muted style={styles.version}>Version 1.0.1</AppText>
       </ScrollView>
     </Screen>
   );

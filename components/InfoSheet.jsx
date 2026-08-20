@@ -23,7 +23,7 @@ export default function InfoSheet({ visible, onClose }) {
           <DisplayText style={styles.title}>luxjson</DisplayText>
           <AppText muted style={styles.text}>{t.infoText}</AppText>
           <View style={[styles.version, { backgroundColor: theme.primaryContainer }]}>
-            <AppText style={{ color: theme.primary, fontWeight: '700' }}>v1.0.0 · Android</AppText>
+            <AppText style={{ color: theme.primary, fontWeight: '700' }}>v1.0.1 · Android</AppText>
           </View>
           <Pressable onPress={() => openExternal('https://github.com/luxjson/luxjson-app')} style={[styles.button, { backgroundColor: theme.primary }]}>
             <AppText style={{ color: theme.onPrimary, fontWeight: '700' }}>{t.repository}</AppText>
