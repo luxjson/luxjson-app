@@ -9,7 +9,7 @@
    ### `luxjson`
    
    ![Status](https://img.shields.io/badge/STATUS-OPERATIONAL-green)
-   ![Version](https://img.shields.io/badge/VERSION-1.0-gold)
+   ![Version](https://img.shields.io/badge/VERSION-1.0.1-gold)
    ![OS](https://img.shields.io/badge/OS-ANDROID-3DDC84)
    
    **luxjson** - The official luxjson mobile application.
@@ -44,10 +44,3 @@
    ### Contributing
    
    If you'd like to report a bug, please do so on our [GitHub Issues page](https://github.com/luxjson)
-   
-
-## Web
-
-- `npm run web` inicia o Expo Web.
-- `npm run build:web` gera a exportação web.
-- O fluxo de autenticação, Community, like, denúncia, exclusão, Conta e ações administrativas usa equivalentes próprios para navegador.
