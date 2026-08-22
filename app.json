@@ -12,7 +12,8 @@
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon/luxjson-icon.png",
-        "backgroundColor": "#0027c4"
+        "backgroundColor": "#0027c4",
+        "monochromeImage": "./assets/icon/luxjson-monochrome.png"
       }
     },
     "plugins": [
@@ -49,6 +50,9 @@
         "projectId": "332b916e-d5d5-4313-bf0b-123739d64fa2"
       }
     },
-    "owner": "luxjsonreserva"
+    "owner": "luxjsonreserva",
+    "web": {
+      "favicon": "./assets/icon/luxjson-icon.png"
+    }
   }
 }

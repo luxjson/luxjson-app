@@ -18,42 +18,44 @@ export default function Home() {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const router = useRouter();
+
   const [profile, setProfile] = useState(null);
   const [repos, setRepos] = useState([]);
   const [info, setInfo] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
 
-
   const load = useCallback(async () => {
-      setLoading(true);
-  
-      try {
-        const username = await getGithubConnection();
-        const result = await fetchGithubProfile(username);
-  
-        setProfile(result.profile);
-  
-        setRepos(
-          Array.isArray(result.repos)
-            ? result.repos
-                .filter((repo) => !repo.fork)
-                .sort(
-                  (a, b) =>
-                    new Date(b.pushed_at).getTime() -
-                    new Date(a.pushed_at).getTime()
-                )
-            : []
-        );
-      } catch {
-        setProfile(null);
-        setRepos([]);
-      }
-    }, []);
-  
-    useEffect(() => {
-      load();
-    }, [load]);
+    setLoading(true);
+
+    try {
+      const username = await getGithubConnection();
+      const result = await fetchGithubProfile(username);
+
+      setProfile(result.profile);
+
+      setRepos(
+        Array.isArray(result.repos)
+          ? result.repos
+              .filter((repo) => !repo.fork)
+              .sort(
+                (a, b) =>
+                  new Date(b.pushed_at).getTime() -
+                  new Date(a.pushed_at).getTime()
+              )
+          : []
+      );
+    } catch {
+      setProfile(null);
+      setRepos([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   return (
     <Screen>
@@ -62,6 +64,7 @@ export default function Home() {
         contentContainerStyle={styles.container}
       >
         <AppHeader title={t.appName} />
+
         <View
           style={[
             styles.hero,
@@ -70,9 +73,7 @@ export default function Home() {
             },
           ]}
         >
-
           <View style={styles.heroContent}>
-
             <DisplayText style={styles.heroTitle}>
               {t.hero}
             </DisplayText>
@@ -111,7 +112,6 @@ export default function Home() {
 
         <View style={styles.sectionHeader}>
           <View>
-
             <DisplayText style={styles.sectionTitle}>
               {t.quickAccess}
             </DisplayText>
@@ -128,10 +128,10 @@ export default function Home() {
           />
 
           <Quick
-            icon="sports-esports"
-            title={t.games}
-            desc={t.gamesDesc}
-            onPress={() => router.push('/(tabs)/games')}
+            icon="people"
+            title={t.community}
+            desc={t.communityDesc}
+            onPress={() => router.push('/(tabs)/community')}
             theme={theme}
           />
 
@@ -151,6 +151,7 @@ export default function Home() {
             theme={theme}
           />
         </View>
+
         <View
           style={[
             styles.overview,
@@ -162,7 +163,6 @@ export default function Home() {
         >
           <View style={styles.overviewHeader}>
             <View style={styles.overviewHeaderText}>
-
               <DisplayText style={styles.overviewTitle}>
                 {t.builtWithPurpose}
               </DisplayText>
@@ -188,6 +188,7 @@ export default function Home() {
             {t.overviewDesc}
           </AppText>
 
+          {/* SOMENTE 2 CARDS */}
           <View style={styles.statsGrid}>
             <Stat
               icon="code"
@@ -197,23 +198,9 @@ export default function Home() {
             />
 
             <Stat
-              icon="sports-esports"
-              value="02"
-              label={t.gamesStat}
-              theme={theme}
-            />
-
-            <Stat
               icon="article"
               value="03"
               label={t.postsStat}
-              theme={theme}
-            />
-
-            <Stat
-              icon="public"
-              value="∞"
-              label={t.ideasStat}
               theme={theme}
             />
           </View>
@@ -221,7 +208,6 @@ export default function Home() {
 
         <View style={styles.sectionHeader}>
           <View>
-
             <DisplayText style={styles.sectionTitle}>
               {t.ideasIntoReality}
             </DisplayText>
@@ -238,9 +224,9 @@ export default function Home() {
           />
 
           <BuildItem
-            icon="sports-esports"
-            title={t.gamesBuild}
-            description={t.gamesBuildDesc}
+            icon="people"
+            title={t.communityBuild}
+            description={t.communityBuildDesc}
             number="02"
             theme={theme}
           />
@@ -678,12 +664,11 @@ const styles = StyleSheet.create({
 
   statsGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 9,
   },
 
   stat: {
-    width: '48%',
+    flex: 1,
     borderWidth: 1,
     borderRadius: 20,
     padding: 13,

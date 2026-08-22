@@ -45,3 +45,9 @@
    
    If you'd like to report a bug, please do so on our [GitHub Issues page](https://github.com/luxjson)
    
+
+## Web
+
+- `npm run web` inicia o Expo Web.
+- `npm run build:web` gera a exportação web.
+- O fluxo de autenticação, Community, like, denúncia, exclusão, Conta e ações administrativas usa equivalentes próprios para navegador.

@@ -1,5 +1,5 @@
-// Backend oficial do luxjson. Não altere para localhost ou outro domínio.
-export const API_URL = 'https://api.luxjson.is-a.dev/api';
+// Usa a URL injetada pelo Expo/.env; em desenvolvimento local, mantém localhost como fallback.
+export const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.luxjson.is-a.dev/api';
 
 export const GITHUB_USER = 'luxjson';
 

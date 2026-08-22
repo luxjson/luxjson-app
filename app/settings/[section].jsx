@@ -1,5 +1,4 @@
 import {
-  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -14,22 +13,23 @@ import { MaterialIcons } from "@react-native-vector-icons/material-icons/static"
 import Screen from "../../components/Screen";
 import AppHeader from "../../components/AppHeader";
 import BackButton from "../../components/BackButton";
-import { AppText } from "../../components/AppText";
+import { AppText, DisplayText } from "../../components/AppText";
 import { useTheme } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { getItchConnection, saveItchConnection } from "../../lib/itch";
 import { getGithubConnection, saveGithubConnection } from "../../lib/github";
-import { getItem } from "../../lib/storage";
+import { deletePost, fetchUserPosts, updateProfile } from "../../lib/communityApi";
 import * as Clipboard from 'expo-clipboard';
 import { openExternal } from "../../lib/external";
-import { SUPPORT_PIX_KEY } from "../../constants/config";
+import { API_URL, SUPPORT_PIX_KEY } from "../../constants/config";
+import { confirmAlert, showAlert } from "../../lib/ui";
 
 const sections = [
   "appearance",
   "language",
   "connections",
-  "admin",
+  "account",
   "support",
   "links",
 ];
@@ -54,7 +54,7 @@ export default function SettingsSection() {
     setAnimationsEnabled,
   } = useTheme();
   const { language, setLanguage, t } = useLanguage();
-  const { isAuthenticated, logout, admin } = useAuth();
+  const { isAuthenticated, logout, admin, currentUser, userRole, isUserAuthenticated, logoutUser } = useAuth();
   const router = useRouter();
   const [github, setGithub] = useState("luxjson");
   const [itch, setItch] = useState("deadsml");
@@ -70,7 +70,7 @@ export default function SettingsSection() {
       appearance: t.customization,
       language: t.language,
       connections: t.connectionsTitle,
-      admin: t.adminTitle,
+      account: t.accountTitle,
       support: t.supportTitle,
       links: t.linksTitle,
     }),
@@ -82,9 +82,9 @@ export default function SettingsSection() {
     try {
       await saveGithubConnection(github);
       await saveItchConnection({ username: itch, apiKey: itchKey });
-      Alert.alert(t.saved, t.connected);
+      showAlert(t.saved, t.connected);
     } catch {
-      Alert.alert(t.error, t.apiUnavailable);
+      showAlert(t.error, t.apiUnavailable);
     } finally {
       setSaving(false);
     }
@@ -150,15 +150,8 @@ export default function SettingsSection() {
             save={saveConnections}
           />
         ) : null}
-        {id === "admin" ? (
-          <Admin
-            t={t}
-            theme={theme}
-            isAuthenticated={isAuthenticated}
-            admin={admin}
-            router={router}
-            logout={logout}
-          />
+        {id === "account" ? (
+          <Account t={t} theme={theme} isAuthenticated={isAuthenticated} admin={admin} currentUser={currentUser} userRole={userRole} isUserAuthenticated={isUserAuthenticated} router={router} logout={logout} logoutUser={logoutUser} />
         ) : null}
         {id === "support" ? <Support t={t} theme={theme} language={language} /> : null}
         {id === "links" ? <Links t={t} theme={theme} /> : null}
@@ -374,6 +367,9 @@ function Language({ t, language, setLanguage, theme }) {
           ["pt", t.portuguese],
           ["en", t.english],
           ["es", t.spanish],
+          ["fr", t.french],
+          ["de", t.german],
+          ["it", t.italian],
         ]}
         selected={language}
         onChange={setLanguage}
@@ -443,74 +439,33 @@ function Connections({
         <MaterialIcons name="open-in-new" size={19} color={theme.primary} />
         <AppText style={styles.flex}>github.com/{github || "luxjson"}</AppText>
       </Pressable>
-      <AppText style={styles.label}>{t.itch}</AppText>
-      <AppText muted style={styles.desc}>
-        {t.publicGamesOnly}
-      </AppText>
-      <Field
-        icon="sports-esports"
-        value={itch}
-        onChangeText={setItch}
-        placeholder={t.itchUsername}
-        theme={theme}
-      />
-      <Field
-        icon="vpn-key"
-        value={itchKey}
-        onChangeText={setItchKey}
-        placeholder={t.itchApiKey}
-        theme={theme}
-        secure
-      />
-      <AppText muted style={styles.hint}>
-        {t.itchApiHint}
-      </AppText>
       <Button theme={theme} primary icon="save" onPress={save}>
         {saving ? t.saving : t.save}
       </Button>
     </Card>
   );
 }
-function Admin({ t, theme, isAuthenticated, admin, router, logout }) {
-  return (
-    <Card theme={theme}>
-      <Row
-        icon="admin-panel-settings"
-        title={t.adminTitle}
-        desc={
-          isAuthenticated
-            ? `${t.session}: ${admin?.username || "Admin"}`
-            : t.adminDesc
-        }
-        theme={theme}
-      />
-      <Button
-        theme={theme}
-        primary
-        icon="arrow-forward"
-        onPress={
-          isAuthenticated
-            ? () => router.push("/admin")
-            : () => router.push("/login")
-        }
-      >
-        {isAuthenticated ? t.openPanel : t.login}
-      </Button>
-      {isAuthenticated ? (
-        <Button
-          theme={theme}
-          onPress={async () => {
-            await logout();
-            router.replace("/");
-          }}
-        >
-          {t.logout}
-        </Button>
-      ) : null}
-    </Card>
-  );
+function Account({t,theme,isAuthenticated,admin,currentUser,userRole,isUserAuthenticated,router,logout,logoutUser}){
+ const [name,setName]=useState(currentUser?.name||''),[username,setUsername]=useState(currentUser?.username||''),[avatar,setAvatar]=useState(currentUser?.avatar_url||''),[saving,setSaving]=useState(false),[posts,setPosts]=useState([]);
+ const loadPosts=async()=>{if(!isUserAuthenticated||userRole!=='user'||!currentUser?.id)return;const r=await fetchUserPosts(currentUser.id);if(r.success)setPosts(r.data||[]);};
+ useEffect(()=>{setName(currentUser?.name||'');setUsername(currentUser?.username||'');setAvatar(currentUser?.avatar_url||'');},[currentUser]);
+ useEffect(()=>{loadPosts();},[isUserAuthenticated,userRole,currentUser?.id]);
+ const save=async()=>{setSaving(true);const r=await updateProfile({name,username,avatar_url:avatar});setSaving(false);if(r.success)showAlert(t.saved,t.saveChanges);else showAlert(t.error,r.message);};
+ const removeMyPost=async(post)=>{
+   const confirmed=await confirmAlert(t.deletePost||'Excluir post',t.deleteConfirm||'Tem certeza que deseja excluir este post?',{confirmText:t.deletePost||'Excluir',cancelText:t.cancel||'Cancelar'});
+   if(!confirmed)return;
+   const r=await deletePost(post.id);
+   if(r.success){
+     setPosts(current=>current.filter(item=>item.id!==post.id));
+     showAlert(t.success||'Sucesso',t.deleted||'Post excluído com sucesso.');
+   }else{
+     showAlert(t.error||'Erro',r.message||'Não foi possível excluir o post.');
+   }
+ };
+ if(isAuthenticated&&admin&&userRole!=='user')return <Card theme={theme}><Row icon="admin-panel-settings" title={t.accountTitle} desc={`${t.session}: admin/@${admin.username}`} theme={theme}/><Button theme={theme} primary icon="arrow-forward" onPress={()=>router.push('/admin')}>{t.openPanel}</Button><Button theme={theme} onPress={async()=>{await logout();router.replace('/login')}}>{t.logout}</Button></Card>;
+ if(!isUserAuthenticated)return <Card theme={theme}><Row icon="account-circle" title={t.accountTitle} desc={t.accountDesc} theme={theme}/><Button theme={theme} primary icon="login" onPress={()=>router.push('/login')}>{t.login}</Button><Button theme={theme} onPress={()=>router.push('/register')}>{t.register}</Button></Card>;
+ return <><Card theme={theme}><View style={styles.profileHeader}><View style={[styles.avatar,{backgroundColor:theme.primaryContainer}]}><AppText style={{fontSize:22,color:theme.primary,fontWeight:'800'}}>{String(name||'?').charAt(0).toUpperCase()}</AppText></View><View style={styles.flex}><DisplayText style={{fontSize:24}}>{name}</DisplayText><AppText muted>@{username} · #{currentUser?.registration_number}</AppText></View></View><AppText style={styles.label}>{t.fullName}</AppText><Field icon="person" value={name} onChangeText={setName} placeholder={t.fullName} theme={theme}/><AppText style={styles.label}>Username</AppText><Field icon="alternate-email" value={username} onChangeText={setUsername} placeholder={t.username} theme={theme}/><AppText style={styles.label}>{t.avatarUrl}</AppText><Field icon="image" value={avatar} onChangeText={setAvatar} placeholder={t.avatarUrl} theme={theme}/><Button theme={theme} primary icon="save" onPress={save}>{saving?t.saving:t.saveChanges}</Button></Card><Card theme={theme}><Row icon="forum" title={t.myPosts} theme={theme}/>{posts.map(p=><View key={p.id} style={[styles.myPost,{borderBottomColor:theme.surfaceVariant}]}><View style={styles.flex}><AppText numberOfLines={3}>{p.content}</AppText><AppText muted style={{fontSize:10}}>{new Date(p.created_at).toLocaleDateString()}</AppText></View><Pressable onPress={()=>removeMyPost(p)} hitSlop={8} accessibilityRole="button" accessibilityLabel={t.deletePost||'Excluir post'} style={[styles.deleteMyPost,{borderColor:theme.error}]}><MaterialIcons name="delete-outline" size={20} color={theme.error}/></Pressable></View>)}{!posts.length?<AppText muted>{t.noPosts||'Nenhum post ainda.'}</AppText>:null}</Card><Button theme={theme} onPress={async()=>{await logoutUser();router.replace('/login')}}>{t.logout}</Button></>;
 }
-
 function Support({ t, theme }) {
   const pixKey = SUPPORT_PIX_KEY;
   const [pixModalVisible, setPixModalVisible] = useState(false);
@@ -638,8 +593,8 @@ function Support({ t, theme }) {
 function Links({ t, theme }) {
   const links = [
     ["language", t.portfolio, "https://luxjson.is-a.dev"],
-    ["dns", t.apiSite, "https://api.luxjson.is-a.dev"],
-    ["description", t.docs, "https://api.luxjson.is-a.dev/docs"],
+    ["dns", t.apiSite, API_URL.replace(/\/api\/?$/, "")],
+    ["description", t.docs, `${API_URL.replace(/\/api\/?$/, "")}/docs`],
     ["sports-esports", "itch.io", "https://deadsml.itch.io"],
     ["code", "GitHub", "https://github.com/luxjson"],
   ];
@@ -666,6 +621,7 @@ function Links({ t, theme }) {
 
 const styles = StyleSheet.create({
   container: { padding: 18, paddingBottom: 135, gap: 15 },
+  profileHeader:{flexDirection:"row",alignItems:"center",gap:13}, avatar:{width:64,height:64,borderRadius:22,alignItems:"center",justifyContent:"center"}, myPost:{paddingVertical:12,borderBottomWidth:1,flexDirection:"row",alignItems:"center",gap:10}, deleteMyPost:{width:36,height:36,alignItems:"center",justifyContent:"center",borderWidth:1,borderRadius:10},
   card: { borderWidth: 1, borderRadius: 28, padding: 20, gap: 15 },
   row: { flexDirection: "row", alignItems: "center", gap: 12 },
   icon: {
@@ -679,7 +635,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 16 },
   desc: { fontSize: 12, lineHeight: 18, marginTop: 2 },
   label: { fontSize: 12, letterSpacing: 1, marginTop: 2 },
-  choiceRow: { flexDirection: "row", gap: 8 },
+  choiceRow: { flexDirection: "column", gap: 8 },
   choice: {
     flex: 1,
     minHeight: 44,

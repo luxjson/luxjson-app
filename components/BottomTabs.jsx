@@ -36,12 +36,12 @@ export default function BottomTabs() {
       />
 
       <Tabs.Screen
-        name="games"
+        name="community"
         options={{
-          title: t.games,
-          tabBarLabel: t.games,
+          title: t.community,
+          tabBarLabel: t.community,
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="sports-esports" size={size} color={color} />
+            <MaterialIcons name="people" size={size} color={color} />
           ),
         }}
       />

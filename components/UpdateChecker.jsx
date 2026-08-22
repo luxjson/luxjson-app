@@ -52,7 +52,7 @@ export default function UpdateChecker() {
       const release = await response.json();
       if (release?.draft || release?.prerelease || !release?.tag_name) return;
 
-      const currentVersion = Constants.expoConfig?.version || '1.0.1';
+      const currentVersion = Constants.expoConfig?.version;
       if (!mounted.current || !isNewerVersion(release.tag_name, currentVersion)) return;
 
       setUpdate({

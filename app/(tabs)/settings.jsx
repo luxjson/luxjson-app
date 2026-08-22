@@ -1,3 +1,4 @@
+import { API_URL } from "../../constants/config";
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useMemo, useState } from 'react';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons/static';
@@ -20,7 +21,7 @@ export default function Settings() {
     ['appearance', 'palette', t.customization, t.customizationDesc, `${t.theme} ${t.materialYou} ${t.accent}`],
     ['language', 'language', t.language, t.languageDesc, `${t.portuguese} ${t.english} ${t.spanish}`],
     ['connections', 'link', t.connectionsTitle, t.connectionsDesc, `${t.github} ${t.itch}`],
-    ['admin', 'admin-panel-settings', t.adminTitle, t.adminDesc, t.adminArea],
+    ['account', 'account-circle', t.accountTitle, t.accountDesc, `${t.login} ${t.register}`],
     ['support', 'favorite-border', t.supportTitle, t.supportDesc, `${t.supportItch} ${t.supportGithub}`],
     ['links', 'public', t.linksTitle, t.linksDesc, `${t.portfolio} ${t.apiSite} ${t.docs}`],
   ], [t]);
@@ -66,7 +67,7 @@ export default function Settings() {
         <View style={styles.footerLinks}>
           <Pressable onPress={() => openExternal('https://luxjson.is-a.dev')}><AppText muted style={styles.footerLink}>{t.portfolio}</AppText></Pressable>
           <View style={[styles.dot, { backgroundColor: theme.outline }]} />
-          <Pressable onPress={() => openExternal('https://api.luxjson.is-a.dev')}><AppText muted style={styles.footerLink}>{t.apiSite}</AppText></Pressable>
+          <Pressable onPress={() => openExternal(API_URL.replace(/\/api\/?$/, '') + '/docs')}><AppText muted style={styles.footerLink}>{t.apiSite}</AppText></Pressable>
         </View>
         <AppText muted style={styles.version}>Version 1.0.1</AppText>
       </ScrollView>
