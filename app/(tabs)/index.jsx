@@ -329,7 +329,7 @@ export default function Home() {
             <BrandIconButton
               icon="instagram"
               onPress={() =>
-                openExternal('https://instagram.com/luxjson')
+                openExternal('https://instagram.com/itslucasdev')
               }
               accessibilityLabel="Instagram"
             />
